@@ -5,7 +5,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Children } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { getComponentNamespace } from '../../globals/namespace';
 
@@ -23,24 +23,28 @@ const Transition = ({
   leaveTimeout,
   timeout,
 }) => (
-  <ReactCSSTransitionGroup
-    className={namespace}
-    component={component}
-    transitionAppear
-    transitionAppearTimeout={appearTimeout || timeout}
-    transitionEnterTimeout={enterTimeout || timeout}
-    transitionLeaveTimeout={leaveTimeout || timeout}
-    transitionName={{
-      appear: `${className}__transition--appear`,
-      appearActive: `${className}__transition--appear--active`,
-      enter: `${className}__transition--enter`,
-      enterActive: `${className}__transition--enter--active`,
-      leave: `${className}__transition--leave`,
-      leaveActive: `${className}__transition--leave--active`,
-    }}
-  >
-    {children}
-  </ReactCSSTransitionGroup>
+  <TransitionGroup>
+    <CSSTransition
+      className={namespace}
+      classNames={{
+        appear: `${className}__transition--appear`,
+        appearActive: `${className}__transition--appear--active`,
+        enter: `${className}__transition--enter`,
+        enterActive: `${className}__transition--enter--active`,
+        leave: `${className}__transition--leave`,
+        leaveActive: `${className}__transition--leave--active`,
+      }}
+      component={component}
+      timeout={{
+        appear: appearTimeout || timeout,
+        enter: enterTimeout || timeout,
+        exit: leaveTimeout || timeout,
+      }}
+      appear
+    >
+      {children}
+    </CSSTransition>
+  </TransitionGroup>
 );
 
 Transition.defaultProps = {
